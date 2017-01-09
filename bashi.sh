@@ -1,4 +1,24 @@
 #!/bin/bash
 
+rm -f out
+mkfifo out
+trap "rm -f out" EXIT
 # Starts the web server
-while true; do { echo -e 'HTTP/1.1 200 OK\r\n'; lib/send_response.sh; } | nc -l 8888; done
+while true
+do
+  cat out | nc -l 8888 > >( # from http://stackoverflow.com/a/24342101/6835068
+    export REQUEST=
+    while read line
+    do
+      line=$(echo "$line" | tr -d '[\r\n]')
+
+      if echo "$line" | grep -qE '^GET /'
+      then
+        REQUEST=$(echo "$line" | cut -d ' ' -f2)
+      elif [ "x$line" = x ]
+      then
+        lib/send_response.sh > out
+      fi
+    done
+  )
+done
