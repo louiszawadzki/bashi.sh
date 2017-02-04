@@ -6,7 +6,7 @@ trap "rm -f out" EXIT
 # Starts the web server
 while true
 do
-  cat out | nc -l 8888 > >( # from http://stackoverflow.com/a/24342101/6835068
+  cat out | nc -l -p 80 > >( # from http://stackoverflow.com/a/24342101/6835068
     export REQUEST=
     while read line
     do
