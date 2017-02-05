@@ -6,5 +6,3 @@ services:
     container_name: bashish
     ports:
       - '8080:80'
-    volumes:
-      - /home/z/workspace/bashish:/var/www/bashish
